@@ -153,12 +153,28 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         addMessage(Message(text: DialogText(text: [responseJson['response']])));
       });
-      if(responseJson['response'].toString().contains('BotWheels')){
-        await Future.delayed(Duration(seconds: 3));
-        Navigator.push(context, MaterialPageRoute(builder: (_) => FaceDetectorPage()));
+      if (responseJson['response'].toString().contains('BotWheels')) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("BotWheels 🔥"),
+              content: const Text(
+                  "This will take you to BotWheels - Drive Mode Page"),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("DENY"),
+                ),
+                TextButton(
+                    onPressed: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => FaceDetectorPage())),
+                    child: const Text("ALLOW")),
+              ],
+            );
+          },
+        );
       }
-
-
     }
   }
 
