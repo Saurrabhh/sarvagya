@@ -97,7 +97,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ],
-        elevation: 0,
         // backgroundColor: const Color(0xff14122a),
       ),
       body: Column(
