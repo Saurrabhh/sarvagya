@@ -12,6 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:sarvagya/route_generator.dart';
+import 'package:sarvagya/screens/face_detector_page.dart';
 import 'package:sarvagya/screens/messages.dart';
 import 'firebase/firebase_options.dart';
 
@@ -150,6 +151,11 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         addMessage(Message(text: DialogText(text: [responseJson['response']])));
       });
+      if(responseJson['response'].toString().contains('BotWheels')){
+        await Future.delayed(Duration(seconds: 3));
+        Navigator.push(context, MaterialPageRoute(builder: (_) => FaceDetectorPage()));
+      }
+
 
     }
   }
