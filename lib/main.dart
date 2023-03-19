@@ -164,9 +164,10 @@ class _HomePageState extends State<HomePage> {
                     child: const Text("DENY"),
                   ),
                   TextButton(
-                      onPressed: () => Navigator.of(context).push(
+                      onPressed: () => Navigator.push(
+                          context,
                           MaterialPageRoute(
-                              builder: (context) => const FaceDetectorPage())),
+                              builder: (_) => FaceDetectorPage())),
                       child: const Text("ALLOW")),
                 ],
               );
