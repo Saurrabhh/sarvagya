@@ -12,6 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:sarvagya/route_generator.dart';
+import 'package:sarvagya/screens/face_detector_page.dart';
 import 'package:sarvagya/screens/messages.dart';
 import 'firebase/firebase_options.dart';
 
@@ -149,8 +150,30 @@ class _HomePageState extends State<HomePage> {
 
       setState(() {
         addMessage(Message(text: DialogText(text: [responseJson['response']])));
+        if (responseJson['response'].toString().contains('BotWheels')) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text("BotWheels 🔥"),
+                content: const Text(
+                    "This will take you to BotWheels - Drive Mode Page"),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text("DENY"),
+                  ),
+                  TextButton(
+                      onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => const FaceDetectorPage())),
+                      child: const Text("ALLOW")),
+                ],
+              );
+            },
+          );
+        }
       });
-
     }
   }
 
