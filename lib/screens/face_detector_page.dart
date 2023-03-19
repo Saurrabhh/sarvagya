@@ -57,6 +57,7 @@ class _FaceDetectorPageState extends State<FaceDetectorPage> {
       initialDirection: CameraLensDirection.front,
     );
   }
+
   location(BuildContext context) async {
     print("LOC");
     await Permission.location.serviceStatus.isEnabled;

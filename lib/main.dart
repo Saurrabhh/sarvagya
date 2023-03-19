@@ -14,6 +14,7 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:sarvagya/route_generator.dart';
 import 'package:sarvagya/screens/face_detector_page.dart';
 import 'package:sarvagya/screens/messages.dart';
+import 'package:sarvagya/widegts/navigationDrawerWidget.dart';
 import 'firebase/firebase_options.dart';
 
 List<CameraDescription> cameras = [];
@@ -126,6 +127,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      drawer: const NavigationDrawerWidget(),
     );
   }
 
@@ -175,6 +177,15 @@ class _HomePageState extends State<HomePage> {
           );
         }
       });
+<<<<<<< HEAD
+=======
+      if(responseJson['response'].toString().contains('BotWheels')){
+        await Future.delayed(Duration(seconds: 3));
+        Navigator.push(context, MaterialPageRoute(builder: (_) => FaceDetectorPage()));
+      }
+
+
+>>>>>>> 116ed252372f5d305478e6068ecbce5a715bdc4d
     }
   }
 
