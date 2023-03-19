@@ -13,6 +13,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:sarvagya/route_generator.dart';
 import 'package:sarvagya/screens/messages.dart';
+import 'package:sarvagya/widegts/navigationDrawerWidget.dart';
 import 'firebase/firebase_options.dart';
 
 List<CameraDescription> cameras = [];
@@ -125,6 +126,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      drawer: const NavigationDrawerWidget(),
     );
   }
 
