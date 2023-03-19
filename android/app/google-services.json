@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "333264671887",
+    "project_id": "sarvagya-a31fc",
+    "storage_bucket": "sarvagya-a31fc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:333264671887:android:e4537059fd8517347e8cfa",
+        "android_client_info": {
+          "package_name": "com.example.sarvagya"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "333264671887-rnd2k4q7l0c4n94velo7vikide5f6h8m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZDs3-heyj4mr2Jn8uIQulfLleM0NYSaM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "333264671887-rnd2k4q7l0c4n94velo7vikide5f6h8m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "333264671887-5g1arfs18mkqnergld1phcfogkj3t8lk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.sarvagya"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
