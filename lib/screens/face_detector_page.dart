@@ -1,4 +1,8 @@
-import 'package:sarvagya/screens/dashboard.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:sarvagya/utils/face_detector_painter.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 import 'package:geocoding/geocoding.dart';
@@ -14,6 +18,8 @@ class FaceDetectorPage extends StatefulWidget {
   @override
   State<FaceDetectorPage> createState() => _FaceDetectorPageState();
 }
+String message = "This is a test message!";
+List<String> recipients = ["+919425253909", "8720068368"];
 
 class _FaceDetectorPageState extends State<FaceDetectorPage> {
   int alarmCount = 0;
@@ -51,6 +57,43 @@ class _FaceDetectorPageState extends State<FaceDetectorPage> {
       initialDirection: CameraLensDirection.front,
     );
   }
+  location(BuildContext context) async {
+    print("LOC");
+    await Permission.location.serviceStatus.isEnabled;
+    print(Permission.location.serviceStatus.isEnabled);
+    _sendSMS(message, recipients);
+  }
+
+  // void _sendSMS(String message, List<String> recipients) async {
+  //   String _result = await sendSMS(
+  //       message: message, recipients: recipients, sendDirect: true)
+  //       .catchError((onError) {
+  //     print(onError);
+  //   });
+  //   print(_result);
+  // }
+
+  void playSound(BuildContext context) {
+    final player = AudioPlayer();
+    player.play(AssetSource('alarm.mpeg'));
+    QuickAlert.show(
+        context: context,
+        type: QuickAlertType.warning,
+        onConfirmBtnTap: () {
+          player.stop();
+          Navigator.pop(context);
+        });
+  }
+
+  call(BuildContext context) {
+    FlutterPhoneDirectCaller.callNumber("+916261934855");
+  }
+
+
+  camera(BuildContext context) {
+    NavigatorState state = Navigator.of(context);
+    state.pushNamedAndRemoveUntil('camera', (Route route) => false);
+  }
 
   Future<void> processImage(final InputImage inputImage) async {
     if (!_canProcess) return;
@@ -84,7 +127,7 @@ class _FaceDetectorPageState extends State<FaceDetectorPage> {
             setState(() {
               alarmCount = alarmCount + 1;
             });
-            Dashboard.playSound(context);
+            playSound(context);
             print(alarmCount);
             drowsyCount = 0;
             print(" ALARM !!!    WAKE UP DUDE...");
@@ -95,7 +138,7 @@ class _FaceDetectorPageState extends State<FaceDetectorPage> {
               // SEND SMS
             }
             if (alarmCount > 4) {
-              Dashboard.call(context);
+             call(context);
               setState(() {
                 alarmCount = 0;
               });
@@ -122,7 +165,7 @@ class _FaceDetectorPageState extends State<FaceDetectorPage> {
           });
 
           if (yawningCount > 5) {
-            Dashboard.playSound(context);
+            playSound(context);
             // getLatLong();
             yawningCount = 0;
             setState(() {
@@ -137,7 +180,7 @@ class _FaceDetectorPageState extends State<FaceDetectorPage> {
               // SEND SMS
             }
             if (alarmCount > 4) {
-              Dashboard.call(context);
+              call(context);
               setState(() {
                 alarmCount = 0;
               });

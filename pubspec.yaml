@@ -54,6 +54,8 @@ dependencies:
   gradient_borders: ^1.0.0
   geolocator: ^9.0.2
   geocoding: ^2.0.5
+  dialog_flowtter: ^0.3.3
+  http: ^0.13.5
 
 dev_dependencies:
   flutter_test:
@@ -78,9 +80,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -12,7 +12,7 @@ class DriveDetails extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(25),
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
                 Color(0xff14122a),
@@ -37,6 +37,7 @@ class DriveDetails extends StatelessWidget {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => DriveModePage()));
                 },
+                child: Container(height: 100,width: 100,color: Colors.red,),
               ),
             ],
           ),
