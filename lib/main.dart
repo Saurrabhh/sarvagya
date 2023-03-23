@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:http/http.dart' as http;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:dialog_flowtter/dialog_flowtter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
@@ -15,6 +16,7 @@ import 'package:sarvagya/route_generator.dart';
 import 'package:sarvagya/screens/face_detector_page.dart';
 import 'package:sarvagya/screens/messages.dart';
 import 'package:sarvagya/widegts/navigationDrawerWidget.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'firebase/firebase_options.dart';
 
 List<CameraDescription> cameras = [];
@@ -51,6 +53,16 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
+    // if(FirebaseAuth.instance.currentUser == null){
+    //   return MaterialApp(
+    //     debugShowCheckedModeBanner: false,
+    //     theme: ThemeData(
+    //       primarySwatch: Colors.teal,
+    //     ),
+    //     initialRoute: 'verify',
+    //     onGenerateRoute: RouteGenerator.generateRoute,
+    //   );
+    // }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -59,6 +71,7 @@ class MyApp extends StatelessWidget {
       initialRoute: 'home',
       onGenerateRoute: RouteGenerator.generateRoute,
     );
+
   }
 }
 
@@ -74,16 +87,54 @@ class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> messages = [];
   String message = "This is a test message!";
   List<String> recipients = ["+919425253909", "8720068368"];
-
+  SpeechToText speechToText = SpeechToText();
+  bool _speechEnabled = false;
+  var words = "hfkjjk";
   @override
   void initState() {
     DialogFlowtter.fromFile().then((instance) => dialogFlowtter = instance);
+    _initSpeech();
     super.initState();
   }
 
+  void _initSpeech() async {
+    _speechEnabled = await speechToText.initialize();
+    setState(() {});
+  }
+
+  void _startListening() async {
+    await speechToText.listen(onResult: _onSpeechResult);
+    setState(() {});
+  }
+
+  void _stopListening() async {
+    await speechToText.stop();
+    setState(() {});
+  }
+
+
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    setState(() {
+      words = result.recognizedWords;
+      _controller.text = words;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    var height = size.height;
+    var width = size.width;
+    var isListening = false;
+
     return Scaffold(
+      // floatingActionButtonLocation: FloatingActionButtonLocation.,
+      // floatingActionButton: AvatarGlow(
+      //
+      //   endRadius: 50.0,
+      //   child: const Icon(Icons.mic),
+      // ),
       appBar: AppBar(
         title: const Text(
           'Dashboard',
@@ -103,16 +154,33 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
+          // Container(
+          //   alignment: Alignment.topCenter,
+          //   child: Text(
+          //     // If listening is active show the recognized words
+          //     speechToText.isListening
+          //         ? words
+          //         : _speechEnabled
+          //         ? 'Tap the microphone to start listening...'
+          //         : 'Speech not available',
+          //   ),
+          // ),
           Expanded(child: MessagesScreen(messages: messages)),
+
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            color: Colors.teal.shade800,
+            decoration: BoxDecoration(
+                color: Colors.teal.shade800,
+                borderRadius: const BorderRadius.all(Radius.circular(20))),
+            alignment: Alignment.bottomLeft,
+            width: width,
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
             child: Row(
               children: [
                 Expanded(
                     child: TextField(
+
                   controller: _controller,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                   ),
                 )),
@@ -121,7 +189,27 @@ class _HomePageState extends State<HomePage> {
                       sendMessage(_controller.text);
                       _controller.clear();
                     },
-                    icon: Icon(Icons.send))
+                    icon: const Icon(Icons.send)),
+                GestureDetector(
+                  onTapDown: (details){
+                      print("Listening");
+                      _startListening();
+                  },
+
+                  onTapUp: (details){
+                    _stopListening();
+                  },
+
+                  child: AvatarGlow(
+                    animate: isListening,
+                    duration: const Duration(milliseconds: 2000),
+                    repeat: true,
+                    repeatPauseDuration: const Duration(milliseconds: 100),
+                    endRadius: 30.0,
+                    child:
+                        const CircleAvatar(radius: 25, child: Icon(Icons.mic)),
+                  ),
+                )
               ],
             ),
           ),
@@ -167,8 +255,13 @@ class _HomePageState extends State<HomePage> {
                   child: const Text("DENY"),
                 ),
                 TextButton(
-                    onPressed: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => FaceDetectorPage())),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => FaceDetectorPage()));
+                    },
                     child: const Text("ALLOW")),
               ],
             );

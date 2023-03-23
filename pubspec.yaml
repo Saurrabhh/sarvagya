@@ -56,6 +56,8 @@ dependencies:
   geocoding: ^2.0.5
   dialog_flowtter: ^0.3.3
   http: ^0.13.5
+  avatar_glow: ^2.0.2
+  speech_to_text: ^6.1.1
 
 dev_dependencies:
   flutter_test:
