@@ -139,18 +139,30 @@ class _CameraViewState extends State<CameraView> {
           ),
           Align(
             alignment: Alignment.center,
-            child: ClipOval(child: _liveBody(),),
+            child: ClipOval(
+              child: _liveBody(),
+            ),
           ),
           SizedBox(
-            height: 20,
+            height: 15,
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // buildTimer(),
-              const SizedBox(height: 30),
-              // buildButtons()
-            ],
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // buildTimer(),
+                const Text(
+                  "🚫 Donot drive like this guy...",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                Image.asset(
+                  "assets/botwheels.gif",
+                  width: 400,
+                ),
+                // buildButtons()
+              ],
+            ),
           ),
         ],
       ),

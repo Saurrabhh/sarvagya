@@ -137,19 +137,15 @@ class _FaceDetectorPageState extends State<FaceDetectorPage> {
             (face.leftEyeOpenProbability! < 0.3 &&
                 face.rightEyeOpenProbability! < 0.3)) {
           print("\n........SLEEPING........\n");
-          setState(() {
-            // widget.alertSleepingText = "Driver is feeling drowsy";
-            drowsyCount = drowsyCount + 1;
-          });
+
+          drowsyCount = drowsyCount + 1;
           if (drowsyCount > 8) {
-            setState(() {
-              alarmCount = alarmCount + 1;
-            });
-            playSound(context);
-            print(alarmCount);
-            drowsyCount = 0;
+            alarmCount = alarmCount + 1;
             print(" ALARM !!!    WAKE UP DUDE...");
+
+            playSound(context);
             //drowsy count is set back to 0
+            drowsyCount = 0;
             if (alarmCount > 2 && alarmCount <= 4) {
               getLatLong();
               print("send");
@@ -157,18 +153,11 @@ class _FaceDetectorPageState extends State<FaceDetectorPage> {
             }
             if (alarmCount > 4) {
               call(context);
-              setState(() {
-                alarmCount = 0;
-              });
+              alarmCount = 0;
             }
-
-            //maintain alarmCount,    if alarm is played more than 2 times,   send sms/call
           }
         } else {
-          setState(() {
-            drowsyCount = 0;
-            // widget.alertSleepingText = "Driver is not feeling drowsy";
-          });
+          drowsyCount = 0;
         }
 
         print(face.smilingProbability);
@@ -182,16 +171,15 @@ class _FaceDetectorPageState extends State<FaceDetectorPage> {
             yawningCount = yawningCount + 1;
           });
 
-          if (yawningCount > 5) {
+          if (yawningCount > 4) {
             playSound(context);
             // getLatLong();
             yawningCount = 0;
-            setState(() {
-              alarmCount = alarmCount + 1;
-            });
-            //play alarm sound until driver stops it
             // if driver stops the alarm, yawning count is set back to 0
+            alarmCount = alarmCount + 1;
+            //play alarm sound until driver stops it
             print(" ALARM !!!    WAKE UP DUDE...");
+
             if (alarmCount > 2 && alarmCount <= 4) {
               getLatLong();
               print("send");
@@ -199,18 +187,12 @@ class _FaceDetectorPageState extends State<FaceDetectorPage> {
             }
             if (alarmCount > 4) {
               call(context);
-              setState(() {
-                alarmCount = 0;
-              });
+              alarmCount = 0;
             }
-
             //maintain alramCount,    if alarm is played more than 2 times,   send sms/call
           }
         } else {
-          setState(() {
-            yawningCount = 0;
-            // widget.alertYawningText = "Driver is not yawning";
-          });
+          yawningCount = 0;
         }
       }
     } else {

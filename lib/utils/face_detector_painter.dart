@@ -16,16 +16,17 @@ class FaceDetectorPainter extends CustomPainter {
       ..strokeWidth = 1.0
       ..color = Colors.blue;
     for (final Face face in faces) {
-      canvas.drawRect(
-        Rect.fromLTRB(
-          translateX(face.boundingBox.left, rotation, size, absoluteImageSize),
-          translateY(face.boundingBox.top, rotation, size, absoluteImageSize),
-          translateX(face.boundingBox.right, rotation, size, absoluteImageSize),
-          translateY(
-              face.boundingBox.bottom, rotation, size, absoluteImageSize),
-        ),
-        paint,
-      );
+      // canvas.drawRect(
+      //   Rect.fromLTRB(
+      //     translateX(face.boundingBox.left, rotation, size, absoluteImageSize),
+      //     translateY(face.boundingBox.top, rotation, size, absoluteImageSize),
+      //     translateX(face.boundingBox.right, rotation, size, absoluteImageSize),
+      //     translateY(
+      //         face.boundingBox.bottom, rotation, size, absoluteImageSize),
+      //   ),
+      //   paint,
+      // );
+
       //draw the blue circle for detectd points of the face
       void paintCountour(final FaceContourType type) {
         final faceContour = face.contours[type];
@@ -56,10 +57,10 @@ class FaceDetectorPainter extends CustomPainter {
       paintCountour(FaceContourType.upperLipBottom);
       paintCountour(FaceContourType.lowerLipTop);
       paintCountour(FaceContourType.lowerLipBottom);
-      paintCountour(FaceContourType.noseBridge);
-      paintCountour(FaceContourType.noseBridge);
-      paintCountour(FaceContourType.leftCheek);
-      paintCountour(FaceContourType.rightCheek);
+      // paintCountour(FaceContourType.noseBridge);
+      // paintCountour(FaceContourType.noseBridge);
+      // paintCountour(FaceContourType.leftCheek);
+      // paintCountour(FaceContourType.rightCheek);
     }
   }
 
