@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:http/http.dart' as http;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
@@ -15,6 +16,7 @@ import 'package:sarvagya/route_generator.dart';
 import 'package:sarvagya/screens/face_detector_page.dart';
 import 'package:sarvagya/screens/messages.dart';
 import 'package:sarvagya/widegts/navigationDrawerWidget.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'firebase/firebase_options.dart';
 
 List<CameraDescription> cameras = [];
@@ -83,7 +85,20 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var words = "hfkjjk";
+    SpeechToText speechToText = SpeechToText();
+    var size = MediaQuery.of(context).size;
+    var height = size.height;
+    var width = size.width;
+    var isListening = false;
+
     return Scaffold(
+      // floatingActionButtonLocation: FloatingActionButtonLocation.,
+      // floatingActionButton: AvatarGlow(
+      //
+      //   endRadius: 50.0,
+      //   child: const Icon(Icons.mic),
+      // ),
       appBar: AppBar(
         title: const Text(
           'Dashboard',
@@ -103,16 +118,28 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
-          Expanded(child: MessagesScreen(messages: messages)),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            color: Colors.teal.shade800,
+            alignment: Alignment.topCenter,
+            child: Text(
+                words
+            ),
+          ),
+          Expanded(child: MessagesScreen(messages: messages)),
+
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.teal.shade800,
+                borderRadius: const BorderRadius.all(Radius.circular(20))),
+            alignment: Alignment.bottomLeft,
+            width: width,
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
             child: Row(
               children: [
                 Expanded(
                     child: TextField(
+
                   controller: _controller,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                   ),
                 )),
@@ -121,7 +148,50 @@ class _HomePageState extends State<HomePage> {
                       sendMessage(_controller.text);
                       _controller.clear();
                     },
-                    icon: Icon(Icons.send))
+                    icon: const Icon(Icons.send)),
+                GestureDetector(
+                  onTapDown: (details) async{
+                    if(!isListening){
+                      var available = await speechToText.initialize();
+                      if(available){
+                        print("hufhuhaf");
+                        setState(() {
+                            isListening = true;
+                            speechToText.listen(
+                              onResult: (result){
+                                setState(() {
+                                  words = result.recognizedWords;
+                                  print(words);
+                                });
+                              }
+                            ).then((value){
+                              setState(() {
+
+                              });
+                            });
+                        });
+                      }
+                    }
+                  },
+
+                  onTapUp: (details){
+                    setState(() {
+                      isListening = false;
+                      print(isListening);
+                    });
+                    speechToText.stop();
+                  },
+
+                  child: AvatarGlow(
+                    animate: isListening,
+                    duration: const Duration(milliseconds: 2000),
+                    repeat: true,
+                    repeatPauseDuration: const Duration(milliseconds: 100),
+                    endRadius: 30.0,
+                    child:
+                        const CircleAvatar(radius: 25, child: Icon(Icons.mic)),
+                  ),
+                )
               ],
             ),
           ),
