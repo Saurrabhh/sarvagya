@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:dialog_flowtter/dialog_flowtter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
@@ -53,6 +53,16 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
+    // if(FirebaseAuth.instance.currentUser == null){
+    //   return MaterialApp(
+    //     debugShowCheckedModeBanner: false,
+    //     theme: ThemeData(
+    //       primarySwatch: Colors.teal,
+    //     ),
+    //     initialRoute: 'verify',
+    //     onGenerateRoute: RouteGenerator.generateRoute,
+    //   );
+    // }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -61,6 +71,7 @@ class MyApp extends StatelessWidget {
       initialRoute: 'home',
       onGenerateRoute: RouteGenerator.generateRoute,
     );
+
   }
 }
 
@@ -76,17 +87,42 @@ class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> messages = [];
   String message = "This is a test message!";
   List<String> recipients = ["+919425253909", "8720068368"];
-
+  SpeechToText speechToText = SpeechToText();
+  bool _speechEnabled = false;
+  var words = "hfkjjk";
   @override
   void initState() {
     DialogFlowtter.fromFile().then((instance) => dialogFlowtter = instance);
+    _initSpeech();
     super.initState();
   }
 
+  void _initSpeech() async {
+    _speechEnabled = await speechToText.initialize();
+    setState(() {});
+  }
+
+  void _startListening() async {
+    await speechToText.listen(onResult: _onSpeechResult);
+    setState(() {});
+  }
+
+  void _stopListening() async {
+    await speechToText.stop();
+    setState(() {});
+  }
+
+
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    setState(() {
+      words = result.recognizedWords;
+      _controller.text = words;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    var words = "hfkjjk";
-    SpeechToText speechToText = SpeechToText();
     var size = MediaQuery.of(context).size;
     var height = size.height;
     var width = size.width;
@@ -121,7 +157,12 @@ class _HomePageState extends State<HomePage> {
           Container(
             alignment: Alignment.topCenter,
             child: Text(
-                words
+              // If listening is active show the recognized words
+              speechToText.isListening
+                  ? words
+                  : _speechEnabled
+                  ? 'Tap the microphone to start listening...'
+                  : 'Speech not available',
             ),
           ),
           Expanded(child: MessagesScreen(messages: messages)),
@@ -150,36 +191,13 @@ class _HomePageState extends State<HomePage> {
                     },
                     icon: const Icon(Icons.send)),
                 GestureDetector(
-                  onTapDown: (details) async{
-                    if(!isListening){
-                      var available = await speechToText.initialize();
-                      if(available){
-                        print("hufhuhaf");
-                        setState(() {
-                            isListening = true;
-                            speechToText.listen(
-                              onResult: (result){
-                                setState(() {
-                                  words = result.recognizedWords;
-                                  print(words);
-                                });
-                              }
-                            ).then((value){
-                              setState(() {
-
-                              });
-                            });
-                        });
-                      }
-                    }
+                  onTapDown: (details){
+                      print("Listening");
+                      _startListening();
                   },
 
                   onTapUp: (details){
-                    setState(() {
-                      isListening = false;
-                      print(isListening);
-                    });
-                    speechToText.stop();
+                    _stopListening();
                   },
 
                   child: AvatarGlow(
@@ -237,8 +255,13 @@ class _HomePageState extends State<HomePage> {
                   child: const Text("DENY"),
                 ),
                 TextButton(
-                    onPressed: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => FaceDetectorPage())),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => FaceDetectorPage()));
+                    },
                     child: const Text("ALLOW")),
               ],
             );
