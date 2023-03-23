@@ -13,7 +13,7 @@ class CameraView extends StatefulWidget {
   final Function(InputImage inputImage) onImage;
   final CameraLensDirection initialDirection;
 
-  CameraView({
+  const CameraView({
     Key? key,
     required this.title,
     required this.onImage,
@@ -61,8 +61,15 @@ class _CameraViewState extends State<CameraView> {
     _startLive();
   }
 
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
   Future _startLive() async {
     final camera = cameras[_cameraIndex];
+    print(cameras.length);
     _controller = CameraController(
       camera,
       ResolutionPreset.high,
@@ -132,7 +139,7 @@ class _CameraViewState extends State<CameraView> {
           ),
           Align(
             alignment: Alignment.center,
-            child: ClipOval(child: _liveBody()),
+            child: ClipOval(child: _liveBody(),),
           ),
           SizedBox(
             height: 20,
@@ -140,9 +147,9 @@ class _CameraViewState extends State<CameraView> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              buildTimer(),
+              // buildTimer(),
               const SizedBox(height: 30),
-              buildButtons()
+              // buildButtons()
             ],
           ),
         ],
@@ -169,8 +176,6 @@ class _CameraViewState extends State<CameraView> {
 
   Future _switchCamera() async {
     setState(() {
-      _chagingCameraLens = true;
-
       if (_cameraIndex == 0) {
         _cameraIndex = 1;
       } else {
@@ -178,10 +183,10 @@ class _CameraViewState extends State<CameraView> {
       }
     });
     await _startLive();
-    await _startLive();
-    setState(() {
-      _chagingCameraLens = false;
-    });
+    // await _startLive();
+    // setState(() {
+    //   _chagingCameraLens = false;
+    // });
   }
 
   Widget _liveBody() {

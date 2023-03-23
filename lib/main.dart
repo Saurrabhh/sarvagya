@@ -154,17 +154,17 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
-          Container(
-            alignment: Alignment.topCenter,
-            child: Text(
-              // If listening is active show the recognized words
-              speechToText.isListening
-                  ? words
-                  : _speechEnabled
-                  ? 'Tap the microphone to start listening...'
-                  : 'Speech not available',
-            ),
-          ),
+          // Container(
+          //   alignment: Alignment.topCenter,
+          //   child: Text(
+          //     // If listening is active show the recognized words
+          //     speechToText.isListening
+          //         ? words
+          //         : _speechEnabled
+          //         ? 'Tap the microphone to start listening...'
+          //         : 'Speech not available',
+          //   ),
+          // ),
           Expanded(child: MessagesScreen(messages: messages)),
 
           Container(

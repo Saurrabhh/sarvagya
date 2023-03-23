@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -18,6 +19,7 @@ class FaceDetectorPage extends StatefulWidget {
   @override
   State<FaceDetectorPage> createState() => _FaceDetectorPageState();
 }
+
 String message = "This is a test message!";
 List<String> recipients = ["+919425253909", "8720068368"];
 
@@ -47,14 +49,30 @@ class _FaceDetectorPageState extends State<FaceDetectorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return CameraView(
-      title: 'Face Detector',
-      customPaint: _customPaint,
-      text: _text,
-      onImage: (inputImage) {
-        processImage(inputImage);
-      },
-      initialDirection: CameraLensDirection.front,
+    return Scaffold(
+      body: Stack(children: [
+        CameraView(
+          title: 'Face Detector',
+          customPaint: _customPaint,
+          text: _text,
+          onImage: (inputImage) {
+            processImage(inputImage);
+          },
+          initialDirection: CameraLensDirection.front,
+        ),
+        // Positioned(
+        //   child: Align(
+        //     alignment: Alignment.center,
+        //     child: Column(
+        //       children: [
+        //         Text(drowsyCount.toString()),
+        //         Text(alarmCount.toString()),
+        //         Text(yawningCount.toString()),
+        //       ],
+        //     ),
+        //   ),
+        // )
+      ]),
     );
   }
 
@@ -89,7 +107,6 @@ class _FaceDetectorPageState extends State<FaceDetectorPage> {
   call(BuildContext context) {
     FlutterPhoneDirectCaller.callNumber("+916261934855");
   }
-
 
   camera(BuildContext context) {
     NavigatorState state = Navigator.of(context);
@@ -139,7 +156,7 @@ class _FaceDetectorPageState extends State<FaceDetectorPage> {
               // SEND SMS
             }
             if (alarmCount > 4) {
-             call(context);
+              call(context);
               setState(() {
                 alarmCount = 0;
               });
