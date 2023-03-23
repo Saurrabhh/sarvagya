@@ -71,7 +71,6 @@ class MyApp extends StatelessWidget {
       initialRoute: 'home',
       onGenerateRoute: RouteGenerator.generateRoute,
     );
-
   }
 }
 
@@ -112,14 +111,12 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
-
   void _onSpeechResult(SpeechRecognitionResult result) {
     setState(() {
       words = result.recognizedWords;
       _controller.text = words;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +134,7 @@ class _HomePageState extends State<HomePage> {
       // ),
       appBar: AppBar(
         title: const Text(
-          'Dashboard',
+          'Sarvagya',
           style: TextStyle(
               color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
         ),
@@ -170,7 +167,9 @@ class _HomePageState extends State<HomePage> {
           Container(
             decoration: BoxDecoration(
                 color: Colors.teal.shade800,
-                borderRadius: const BorderRadius.all(Radius.circular(20))),
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20))),
             alignment: Alignment.bottomLeft,
             width: width,
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -178,7 +177,6 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Expanded(
                     child: TextField(
-
                   controller: _controller,
                   style: const TextStyle(
                     color: Colors.white,
@@ -191,15 +189,13 @@ class _HomePageState extends State<HomePage> {
                     },
                     icon: const Icon(Icons.send)),
                 GestureDetector(
-                  onTapDown: (details){
-                      print("Listening");
-                      _startListening();
+                  onTapDown: (details) {
+                    print("Listening");
+                    _startListening();
                   },
-
-                  onTapUp: (details){
+                  onTapUp: (details) {
                     _stopListening();
                   },
-
                   child: AvatarGlow(
                     animate: isListening,
                     duration: const Duration(milliseconds: 2000),
