@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sarvagya/screens/face_detector_page.dart';
+import 'package:sarvagya/screens/botwheels_page.dart';
 
 class DriveModePage extends StatefulWidget {
   const DriveModePage({Key? key}) : super(key: key);
@@ -34,7 +34,7 @@ class _DriveModePageState extends State<DriveModePage> {
           onPressed: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const FaceDetectorPage(),
+              builder: (context) => const BotWheelsPage(),
             ),
           ),
           child: Row(
