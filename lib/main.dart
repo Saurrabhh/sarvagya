@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:dialog_flowtter/dialog_flowtter.dart';
+import 'package:sarvagya/screens/sentimental_analysis.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +14,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:sarvagya/route_generator.dart';
-import 'package:sarvagya/screens/face_detector_page.dart';
+import 'package:sarvagya/screens/botwheels_page.dart';
 import 'package:sarvagya/screens/messages.dart';
-import 'package:sarvagya/widegts/navigationDrawerWidget.dart';
+import 'package:sarvagya/widgets/navigationDrawerWidget.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'firebase/firebase_options.dart';
 
@@ -256,7 +257,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (_) => FaceDetectorPage()));
+                              builder: (_) => const BotWheelsPage()));
                     },
                     child: const Text("ALLOW")),
               ],

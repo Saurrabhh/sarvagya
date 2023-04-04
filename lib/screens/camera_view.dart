@@ -12,12 +12,14 @@ class CameraView extends StatefulWidget {
   final String? text;
   final Function(InputImage inputImage) onImage;
   final CameraLensDirection initialDirection;
+  final Widget showWidget;
 
   const CameraView({
     Key? key,
     required this.title,
     required this.onImage,
     required this.initialDirection,
+    required this.showWidget,
     this.customPaint,
     this.text,
   }) : super(key: key);
@@ -144,26 +146,9 @@ class _CameraViewState extends State<CameraView> {
             ),
           ),
           SizedBox(
-            height: 15,
+            height: 10,
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // buildTimer(),
-                const Text(
-                  "🚫 Donot drive like this guy...",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                Image.asset(
-                  "assets/botwheels.gif",
-                  width: 400,
-                ),
-                // buildButtons()
-              ],
-            ),
-          ),
+          widget.showWidget,
         ],
       ),
       floatingActionButton: _floatingActionButton(),
