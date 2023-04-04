@@ -159,8 +159,8 @@ class _CameraViewState extends State<CameraView> {
   Widget? _floatingActionButton() {
     if (cameras.length == 1) return null;
     return SizedBox(
-      height: 70,
-      width: 70,
+      height: 65,
+      width: 65,
       child: FloatingActionButton(
         onPressed: _switchCamera,
         child: const Icon(

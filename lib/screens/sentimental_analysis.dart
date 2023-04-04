@@ -91,7 +91,7 @@ class _SentimentalPageState extends State<SentimentalPage> {
     player.play(AssetSource('plzSmile.mp3'));
     QuickAlert.show(
         context: context,
-        type: QuickAlertType.warning,
+        type: QuickAlertType.error,
         onConfirmBtnTap: () {
           player.stop();
           Navigator.pop(context);
@@ -120,15 +120,15 @@ class _SentimentalPageState extends State<SentimentalPage> {
         double averageEyeOpenProb =
             (face.leftEyeOpenProbability! + face.rightEyeOpenProbability!) /
                 2.0;
-        if (face.smilingProbability! < 0.45) {
+        if (face.smilingProbability! < 0.4) {
           print("\n\n........NOT SMILING........\n\n");
           setState(() {
             noSmileCount = noSmileCount + 1;
           });
 
-          if (noSmileCount > 8) {
-            playSound(context);
+          if (noSmileCount > 10) {
             noSmileCount = 0;
+            playSound(context);
           }
         } else {
           noSmileCount = 0;
