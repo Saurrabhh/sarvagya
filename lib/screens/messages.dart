@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sarvagya/utils/text_to_speech.dart';
 
 class MessagesScreen extends StatefulWidget {
   final List messages;
@@ -43,7 +44,12 @@ class _MessagesScreenState extends State<MessagesScreen> {
                             ? Colors.grey.shade400
                             : Colors.lightGreen),
                     constraints: BoxConstraints(maxWidth: w * 2 / 3),
-                    child: Text(widget.messages[index]['message'].text.text[0]))
+                    child: Text(widget.messages[index]['message'].text.text[0])),
+                widget.messages[index]['isUserMessage']?SizedBox(
+
+                ):IconButton(onPressed: ()=> speak(widget.messages[index]['message'].text.text[0]) , icon: const Icon(Icons.volume_up))
+
+
               ],
             ),
           );
