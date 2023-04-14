@@ -78,7 +78,7 @@
 //
 // // ecPhonePush(BuildContext context) async {
 // //   NavigatorState state = Navigator.of(context);
-// //   print(auth.currentUser?.uid);
+// //   debugPrint(auth.currentUser?.uid);
 // //   final snapshot = await FirebaseManager.database.ref('Users/${auth.currentUser?.uid}').get();
 // //   print(snapshot.value);
 // //

@@ -3,8 +3,8 @@ import 'package:sarvagya/screens/auth_screens/code_verify.dart';
 import 'package:sarvagya/screens/auth_screens/phone_verify.dart';
 import 'package:sarvagya/screens/auth_screens/signup_screen.dart';
 import 'package:sarvagya/screens/drive_mode.dart';
+import 'package:sarvagya/screens/main_dashboard.dart';
 
-import 'main.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -14,7 +14,7 @@ class RouteGenerator {
       case 'verify':
         return MaterialPageRoute(builder: (_) => PhoneVerify());
       case 'home':
-        return MaterialPageRoute(builder: (_) => const HomePage());
+        return MaterialPageRoute(builder: (_) => const MainDashboard());
 
       case '/signup':
         return MaterialPageRoute(

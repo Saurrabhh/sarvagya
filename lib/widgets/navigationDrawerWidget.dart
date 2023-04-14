@@ -11,48 +11,50 @@ class NavigationDrawerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      width: 250,
-      child: Material(
-        child: ListView(
-          children: <Widget>[
-            const SizedBox(
-              height: 40,
-            ),
-            buildMenuItem(
-              drawerText: 'Profile',
-              drawerIcon: Icons.person,
-              onClicked: () => selectedItem(context, 0),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            buildMenuItem(
-              drawerText: 'Bot Wheels',
-              drawerIcon: Icons.car_repair,
-              onClicked: () => selectedItem(context, 2),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            buildMenuItem(
-              drawerText: 'Smile Please',
-              drawerIcon: Icons.insert_emoticon_outlined,
-              onClicked: () => selectedItem(context, 3),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Divider(color: Colors.black),
-            const SizedBox(
-              height: 20,
-            ),
-            buildMenuItem(
-              drawerText: 'LogOut',
-              drawerIcon: Icons.logout,
-              onClicked: () => selectedItem(context, 1),
-            ),
-          ],
+    return SafeArea(
+      child: Drawer(
+        width: 250,
+        child: Material(
+          child: ListView(
+            children: <Widget>[
+              // const SizedBox(
+              //   height: 40,
+              // ),
+              buildMenuItem(
+                drawerText: 'Profile',
+                drawerIcon: Icons.person,
+                onClicked: () => selectedItem(context, 0),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              buildMenuItem(
+                drawerText: 'Bot Wheels',
+                drawerIcon: Icons.car_repair,
+                onClicked: () => selectedItem(context, 2),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              buildMenuItem(
+                drawerText: 'Smile Please',
+                drawerIcon: Icons.insert_emoticon_outlined,
+                onClicked: () => selectedItem(context, 3),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              const Divider(color: Colors.black),
+              const SizedBox(
+                height: 20,
+              ),
+              buildMenuItem(
+                drawerText: 'LogOut',
+                drawerIcon: Icons.logout,
+                onClicked: () => selectedItem(context, 1),
+              ),
+            ],
+          ),
         ),
       ),
     );

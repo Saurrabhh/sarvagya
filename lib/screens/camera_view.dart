@@ -2,7 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
-import 'package:sarvagya/main.dart';
+import '../main.dart';
 import 'buttonWidget.dart';
 import 'dart:async';
 
@@ -35,13 +35,17 @@ class _CameraViewState extends State<CameraView> {
   Timer? timer;
 
   void resetTimer() => setState(() => seconds = minSeconds);
-  CameraController? _controller;
+  late CameraController _controller;
   int _cameraIndex = 0;
-  bool _chagingCameraLens = false;
+  final bool _changingCameraLens = false;
 
   @override
   void initState() {
     super.initState();
+    initialiseCamera();
+  }
+
+  Future<void> initialiseCamera() async {
     if (cameras.any(
       (element) =>
           element.lensDirection == widget.initialDirection &&
@@ -54,18 +58,19 @@ class _CameraViewState extends State<CameraView> {
               element.sensorOrientation == 99,
         ),
       );
-    } else {
+    }
+    else {
       _cameraIndex = cameras.indexOf(
         cameras.firstWhere(
             (element) => element.lensDirection == widget.initialDirection),
       );
     }
-    _startLive();
+    await _startLive();
   }
 
   @override
   void dispose() {
-    _controller?.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -77,11 +82,11 @@ class _CameraViewState extends State<CameraView> {
       ResolutionPreset.high,
       enableAudio: false,
     );
-    _controller?.initialize().then((_) {
+    _controller.initialize().then((_) {
       if (!mounted) {
         return;
       }
-      _controller?.startImageStream(_processCameraImage);
+      _controller.startImageStream(_processCameraImage);
       setState(() {});
     });
   }
@@ -129,9 +134,9 @@ class _CameraViewState extends State<CameraView> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Padding(
+          const Padding(
             padding: EdgeInsets.all(8.0),
-            child: const Text(
+            child: Text(
               "Keep your face inside the frame",
               style: TextStyle(
                   color: Colors.black,
@@ -145,7 +150,7 @@ class _CameraViewState extends State<CameraView> {
               child: _liveBody(),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           widget.showWidget,
@@ -187,12 +192,11 @@ class _CameraViewState extends State<CameraView> {
   }
 
   Widget _liveBody() {
-    if (_controller?.value.isInitialized == false) {
-      return Container(
-          child: CircularProgressIndicator(
+    if (_controller.value.isInitialized == false) {
+      return const CircularProgressIndicator(
         strokeWidth: 4.0,
         color: Colors.red,
-      ));
+      );
     }
     return Container(
       height: MediaQuery.of(context).size.height / 3,
@@ -201,17 +205,11 @@ class _CameraViewState extends State<CameraView> {
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          CameraPreview(_controller!),
+          CameraPreview(_controller),
           if (widget.customPaint != null) widget.customPaint!
         ],
       ),
     );
-  }
-
-  Future _stopLive() async {
-    await _controller?.stopImageStream();
-    await _controller?.dispose();
-    _controller = null;
   }
 
   Widget buildButtons() {
@@ -263,7 +261,7 @@ class _CameraViewState extends State<CameraView> {
 
   Widget buildTime() {
     return Text('$seconds',
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.blue,
           fontSize: 80,
@@ -274,7 +272,7 @@ class _CameraViewState extends State<CameraView> {
     if (reset) {
       resetTimer();
     }
-    timer = Timer.periodic(Duration(seconds: 1), (_) {
+    timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (seconds < 7200) {
         setState(() => seconds++);
       } else {
