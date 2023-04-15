@@ -21,6 +21,8 @@ class _MainDashboardState extends State<MainDashboard> {
   late SpeechToText speechToText;
   bool _speechEnabled = false;
   String words = "";
+  List<String> modes = ['Hi', 'What is your name ?', 'Drive Mode' , 'Recommend me a book' , 'Help'];
+
   @override
   void initState() {
     _initSpeech();
@@ -50,11 +52,57 @@ class _MainDashboardState extends State<MainDashboard> {
         children: [
           Expanded(child: MessagesScreen(messages: messages)),
           Container(
+            height: 50,
+            alignment: Alignment.bottomCenter,
+            padding: const EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 20,
+            ),
+            child: ListView.builder(
+                  itemCount: modes.length,
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      borderRadius: BorderRadius.circular(20),
+                      onTap: () => {
+                        print(modes[index].toString()),
+                        sendMessage(modes[index].toString()),
+                      },
+                      child: Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: 5
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 1,
+                          horizontal: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade100,
+                          border: Border.all(
+                            color: Colors.green,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                        ),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(modes[index]),
+                        ),
+                      ),
+                    );
+                  }
+                ),
+          ),
+          Container(
             decoration: BoxDecoration(
                 color: Colors.teal.shade800,
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20))),
+                    topRight: Radius.circular(20))
+            ),
             alignment: Alignment.bottomLeft,
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
             child: Row(
@@ -201,4 +249,22 @@ class _MainDashboardState extends State<MainDashboard> {
 //   NavigatorState state = Navigator.of(context);
 //   state.pushNamedAndRemoveUntil('camera', (Route route) => false);
 // }
+}
+
+class ModeList extends StatefulWidget{
+  const ModeList({super.key, required List<String> mode});
+
+  @override
+  State<ModeList> createState() => _ModeList();
+}
+
+class _ModeList extends State<ModeList>{
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: Card(),
+    );
+  }
+
 }
