@@ -241,21 +241,3 @@ class _MainDashboardState extends State<MainDashboard> {
 //   state.pushNamedAndRemoveUntil('camera', (Route route) => false);
 // }
 }
-
-class ModeList extends StatefulWidget{
-  const ModeList({super.key, required List<String> mode});
-
-  @override
-  State<ModeList> createState() => _ModeList();
-}
-
-class _ModeList extends State<ModeList>{
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: Card(),
-    );
-  }
-
-}
