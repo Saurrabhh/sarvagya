@@ -67,10 +67,7 @@ class _MainDashboardState extends State<MainDashboard> {
                   ),
                 )),
                 IconButton(
-                    onPressed: () {
-                      sendMessage(_controller.text);
-                      _controller.clear();
-                    },
+                    onPressed: ()=> checkBeforeSending(_controller.text),
                     icon: const Icon(Icons.send)),
                 GestureDetector(
                   onTapDown: (details) {
@@ -159,6 +156,18 @@ class _MainDashboardState extends State<MainDashboard> {
   addMessage(Message message, [bool isUserMessage = false]) {
     messages.add({'message': message, 'isUserMessage': isUserMessage});
   }
+
+  checkBeforeSending(String input){
+    if(input=='recommend'){
+      showRecommendationDialog(context);
+    }
+    else{
+      sendMessage(_controller.text);
+
+    }
+    _controller.clear();
+  }
+
 
 // location(BuildContext context) async {
 //   print("LOC");

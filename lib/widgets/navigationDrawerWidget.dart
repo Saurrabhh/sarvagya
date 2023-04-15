@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sarvagya/screens/drawer_screens/botwheels_page.dart';
+import 'package:sarvagya/screens/drawer_screens/recommendation.dart';
 import 'package:sarvagya/screens/drawer_screens/sentimental_analysis.dart';
 
 import '../firebase/firebase_manager.dart';
@@ -40,6 +41,14 @@ class NavigationDrawerWidget extends StatelessWidget {
                 drawerText: 'Smile Please',
                 drawerIcon: Icons.insert_emoticon_outlined,
                 onClicked: () => selectedItem(context, 3),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              buildMenuItem(
+                drawerText: 'Recommendation',
+                drawerIcon: Icons.book,
+                onClicked: () => selectedItem(context, 4),
               ),
               const SizedBox(
                 height: 20,
@@ -95,6 +104,10 @@ class NavigationDrawerWidget extends StatelessWidget {
       case 3:
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => const SentimentalPage()));
+        break;
+      case 4:
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const Recommendation()));
         break;
     }
   }
