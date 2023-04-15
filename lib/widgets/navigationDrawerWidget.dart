@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sarvagya/screens/botwheels_page.dart';
-import 'package:sarvagya/screens/sentimental_analysis.dart';
+import 'package:sarvagya/screens/drawer_screens/botwheels_page.dart';
+import 'package:sarvagya/screens/drawer_screens/sentimental_analysis.dart';
 
 import '../firebase/firebase_manager.dart';
-import '../screens/ProfileScreen.dart';
+import '../screens/drawer_screens/ProfileScreen.dart';
 import '../screens/auth_screens/LoginScreen.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {

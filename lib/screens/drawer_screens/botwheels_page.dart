@@ -8,7 +8,7 @@ import 'package:sarvagya/utils/face_detector_painter.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'camera_view.dart';
+import '../camera_view.dart';
 import 'package:camera/camera.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
