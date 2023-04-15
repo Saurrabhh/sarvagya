@@ -16,7 +16,6 @@ class MainDashboard extends StatefulWidget {
 }
 
 class _MainDashboardState extends State<MainDashboard> {
-
   final TextEditingController _controller = TextEditingController();
   List<Map<String, dynamic>> messages = [];
   late SpeechToText speechToText;
@@ -62,11 +61,11 @@ class _MainDashboardState extends State<MainDashboard> {
               children: [
                 Expanded(
                     child: TextField(
-                      controller: _controller,
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                    )),
+                  controller: _controller,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                )),
                 IconButton(
                     onPressed: () {
                       sendMessage(_controller.text);
@@ -87,7 +86,7 @@ class _MainDashboardState extends State<MainDashboard> {
                     repeatPauseDuration: const Duration(milliseconds: 100),
                     endRadius: 30.0,
                     child:
-                    const CircleAvatar(radius: 25, child: Icon(Icons.mic)),
+                        const CircleAvatar(radius: 25, child: Icon(Icons.mic)),
                   ),
                 )
               ],
@@ -145,8 +144,14 @@ class _MainDashboardState extends State<MainDashboard> {
     });
     if (responseJson['response'].toString().contains('BotWheels')) {
       await Future.delayed(const Duration(seconds: 5));
-      if(mounted){
+      if (mounted) {
         showBotWheelsDialog(context);
+      }
+    }
+    if (responseJson['response'].toString().contains('Smile Please')) {
+      await Future.delayed(const Duration(seconds: 5));
+      if (mounted) {
+        showSmilePleaseDialog(context);
       }
     }
   }
