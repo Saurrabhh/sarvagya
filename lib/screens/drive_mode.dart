@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sarvagya/screens/botwheels_page.dart';
+import 'package:sarvagya/screens/drawer_screens/botwheels_page.dart';
 
 class DriveModePage extends StatefulWidget {
   const DriveModePage({Key? key}) : super(key: key);

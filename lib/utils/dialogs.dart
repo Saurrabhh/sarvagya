@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../screens/botwheels_page.dart';
-import '../screens/sentimental_analysis.dart';
+import '../screens/drawer_screens/botwheels_page.dart';
+import '../screens/drawer_screens/sentimental_analysis.dart';
 
 showBotWheelsDialog(BuildContext context) async {
   await showDialog(
