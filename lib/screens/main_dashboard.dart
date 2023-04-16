@@ -27,12 +27,20 @@ class _MainDashboardState extends State<MainDashboard> {
   bool _speechEnabled = false;
   bool notInit = true;
   String words = "";
-  List<String> modes = ['Hi', 'What is your name ?', 'Drive Mode' , 'Recommend' , 'Help'];
+  List<String> modes = [
+    'Hi',
+    'What is your name ?',
+    'Drive Mode',
+    'Recommend',
+    'Help'
+  ];
   late Person person;
   late Future future = initPerson();
 
   initPerson() async {
-    final snapshot = await FirebaseDatabase.instance.ref("Users/${FirebaseAuth.instance.currentUser!.uid}").get();
+    final snapshot = await FirebaseDatabase.instance
+        .ref("Users/${FirebaseAuth.instance.currentUser!.uid}")
+        .get();
     person = Person.fromJson(snapshot.value as Map);
     return person;
   }
@@ -44,6 +52,7 @@ class _MainDashboardState extends State<MainDashboard> {
       speak("Hello ${person.name}");
     });
   }
+
   @override
   void initState() {
     person = Provider.of<Person>(context, listen: false);
@@ -79,10 +88,11 @@ class _MainDashboardState extends State<MainDashboard> {
           FutureBuilder(
             future: future,
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-              if(snapshot.connectionState == ConnectionState.waiting){
-                return const Expanded(child: Center(child: CircularProgressIndicator()));
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Expanded(
+                    child: Center(child: CircularProgressIndicator()));
               }
-              if(notInit){
+              if (notInit) {
                 notInit = false;
                 sayHello();
               }
@@ -108,9 +118,7 @@ class _MainDashboardState extends State<MainDashboard> {
                       checkBeforeSending(modes[index].toString()),
                     },
                     child: Container(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: 5
-                      ),
+                      margin: EdgeInsets.symmetric(horizontal: 5),
                       padding: const EdgeInsets.symmetric(
                         vertical: 1,
                         horizontal: 10,
@@ -131,16 +139,14 @@ class _MainDashboardState extends State<MainDashboard> {
                       ),
                     ),
                   );
-                }
-            ),
+                }),
           ),
           Container(
             decoration: BoxDecoration(
                 color: Colors.teal.shade800,
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20))
-            ),
+                    topRight: Radius.circular(20))),
             alignment: Alignment.bottomLeft,
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
             child: Row(
@@ -244,16 +250,14 @@ class _MainDashboardState extends State<MainDashboard> {
     messages.add({'message': message, 'isUserMessage': isUserMessage});
   }
 
-  checkBeforeSending(String input){
-    if(input=='Recommend'){
+  checkBeforeSending(String input) {
+    if (input.toLowerCase().contains('recommend')) {
       showRecommendationDialog(context);
-    }
-    else{
-      sendMessage(_controller.text);
+    } else {
+      sendMessage(input);
     }
     _controller.clear();
   }
-
 
 // location(BuildContext context) async {
 //   print("LOC");
