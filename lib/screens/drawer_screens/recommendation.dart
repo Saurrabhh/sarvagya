@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:dialog_flowtter/dialog_flowtter.dart';
 import 'package:flutter/material.dart';
+import 'package:sarvagya/utils/text_to_speech.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:http/http.dart' as http;
@@ -29,16 +30,7 @@ class _RecommendationState extends State<Recommendation> {
   @override
   void initState() {
     _initSpeech();
-    initConvo();
     super.initState();
-  }
-
-  Future<void> initConvo() async {
-    await Future.delayed(const Duration(seconds: 1));
-    setState(() {
-      addMessage(Message(text: DialogText(text: const ["Enter a movie name to suggest."])));
-    });
-
   }
 
   @override
@@ -67,17 +59,16 @@ class _RecommendationState extends State<Recommendation> {
               children: [
                 Expanded(
                     child: TextField(
-                      controller: _controllerBook,
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                    )),
+                  controller: _controllerBook,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                )),
                 IconButton(
                     onPressed: (){
                       sendMessage(_controllerBook.text.trim());
                       _controllerBook.clear();
-                      },
-
+                    },
                     icon: const Icon(Icons.send)),
                 GestureDetector(
                   onTapDown: (details) {
@@ -93,7 +84,7 @@ class _RecommendationState extends State<Recommendation> {
                     repeatPauseDuration: const Duration(milliseconds: 100),
                     endRadius: 30.0,
                     child:
-                    const CircleAvatar(radius: 25, child: Icon(Icons.mic)),
+                        const CircleAvatar(radius: 25, child: Icon(Icons.mic)),
                   ),
                 )
               ],
@@ -163,5 +154,4 @@ class _RecommendationState extends State<Recommendation> {
   addMessage(Message message, [bool isUserMessage = false]) {
     messages.add({'message': message, 'isUserMessage': isUserMessage});
   }
-
 }

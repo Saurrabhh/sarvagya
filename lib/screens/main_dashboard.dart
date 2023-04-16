@@ -28,12 +28,20 @@ class _MainDashboardState extends State<MainDashboard> {
   bool _speechEnabled = false;
   bool notInit = true;
   String words = "";
-  List<String> modes = ['Hi', 'What is your name ?', 'Drive Mode' , 'Recommend me a book' , 'Help'];
+  List<String> modes = [
+    'Hi',
+    'What is your name ?',
+    'Drive Mode',
+    'Recommend',
+    'Help'
+  ];
   late Person person;
   late Future future = initPerson();
 
   initPerson() async {
-    final snapshot = await FirebaseDatabase.instance.ref("Users/${FirebaseAuth.instance.currentUser!.uid}").get();
+    final snapshot = await FirebaseDatabase.instance
+        .ref("Users/${FirebaseAuth.instance.currentUser!.uid}")
+        .get();
     person = Person.fromJson(snapshot.value as Map);
     return person;
   }
@@ -80,10 +88,11 @@ class _MainDashboardState extends State<MainDashboard> {
           FutureBuilder(
             future: future,
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-              if(snapshot.connectionState == ConnectionState.waiting){
-                return const Expanded(child: Center(child: CircularProgressIndicator()));
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Expanded(
+                    child: Center(child: CircularProgressIndicator()));
               }
-              if(notInit){
+              if (notInit) {
                 notInit = false;
                 sayHello();
               }
@@ -91,12 +100,53 @@ class _MainDashboardState extends State<MainDashboard> {
             },
           ),
           Container(
+            height: 50,
+            alignment: Alignment.bottomCenter,
+            padding: const EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 20,
+            ),
+            child: ListView.builder(
+                itemCount: modes.length,
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () => {
+                      print(modes[index].toString()),
+                      checkBeforeSending(modes[index].toString()),
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 1,
+                        horizontal: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade100,
+                        border: Border.all(
+                          color: Colors.green,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20),
+                        ),
+                      ),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(modes[index]),
+                      ),
+                    ),
+                  );
+                }),
+          ),
+          Container(
             decoration: BoxDecoration(
                 color: Colors.teal.shade800,
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20))
-            ),
+                    topRight: Radius.circular(20))),
             alignment: Alignment.bottomLeft,
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
             child: Row(
@@ -196,12 +246,11 @@ class _MainDashboardState extends State<MainDashboard> {
     messages.add({'message': message, 'isUserMessage': isUserMessage});
   }
 
-  checkBeforeSending(String input){
-    if(input=='recommend' || input=='Recommend'){
+  checkBeforeSending(String input) {
+    if (input.toLowerCase().contains('recommend')) {
       showRecommendationDialog(context);
-    }
-    else{
-      sendMessage(_controller.text);
+    } else {
+      sendMessage(input);
     }
     _controller.clear();
   }

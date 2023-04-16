@@ -19,14 +19,14 @@ class NavigationDrawerWidget extends StatelessWidget {
               // const SizedBox(
               //   height: 40,
               // ),
-              buildMenuItem(
-                drawerText: 'Profile',
-                drawerIcon: Icons.person,
-                onClicked: () => selectedItem(context, 0),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
+              // buildMenuItem(
+              //   drawerText: 'Profile',
+              //   drawerIcon: Icons.person,
+              //   onClicked: () => selectedItem(context, 0),
+              // ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
               buildMenuItem(
                 drawerText: 'Bot Wheels',
                 drawerIcon: Icons.car_repair,
