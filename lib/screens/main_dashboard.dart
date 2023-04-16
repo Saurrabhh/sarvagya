@@ -1,11 +1,16 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:dialog_flowtter/dialog_flowtter.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:http/http.dart' as http;
+import '../dataclass/person.dart';
 import '../utils/dialogs.dart';
+import '../utils/text_to_speech.dart';
 import '../widgets/navigationDrawerWidget.dart';
 import 'messages.dart';
 
@@ -20,11 +25,28 @@ class _MainDashboardState extends State<MainDashboard> {
   List<Map<String, dynamic>> messages = [];
   late SpeechToText speechToText;
   bool _speechEnabled = false;
+  bool notInit = true;
   String words = "";
   List<String> modes = ['Hi', 'What is your name ?', 'Drive Mode' , 'Recommend me a book' , 'Help'];
+  late Person person;
+  late Future future = initPerson();
 
+  initPerson() async {
+    final snapshot = await FirebaseDatabase.instance.ref("Users/${FirebaseAuth.instance.currentUser!.uid}").get();
+    person = Person.fromJson(snapshot.value as Map);
+    return person;
+  }
+
+  sayHello() async {
+    await Future.delayed(const Duration(seconds: 1));
+    setState(() {
+      addMessage(Message(text: DialogText(text: ["Hello ${person.name}"])));
+      speak("Hello ${person.name}");
+    });
+  }
   @override
   void initState() {
+    person = Provider.of<Person>(context, listen: false);
     _initSpeech();
     super.initState();
   }
@@ -40,7 +62,11 @@ class _MainDashboardState extends State<MainDashboard> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushNamedAndRemoveUntil(
+                  context, 'login', (route) => false);
+            },
             icon: const Icon(
               Icons.logout_outlined,
               color: Colors.white,
@@ -50,51 +76,18 @@ class _MainDashboardState extends State<MainDashboard> {
       ),
       body: Column(
         children: [
-          Expanded(child: MessagesScreen(messages: messages)),
-          Container(
-            height: 50,
-            alignment: Alignment.bottomCenter,
-            padding: const EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 20,
-            ),
-            child: ListView.builder(
-                  itemCount: modes.length,
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      borderRadius: BorderRadius.circular(20),
-                      onTap: () => {
-                        print(modes[index].toString()),
-                        sendMessage(modes[index].toString()),
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: 5
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 1,
-                          horizontal: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.green.shade100,
-                          border: Border.all(
-                            color: Colors.green,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                        ),
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text(modes[index]),
-                        ),
-                      ),
-                    );
-                  }
-                ),
+          FutureBuilder(
+            future: future,
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if(snapshot.connectionState == ConnectionState.waiting){
+                return const Expanded(child: Center(child: CircularProgressIndicator()));
+              }
+              if(notInit){
+                notInit = false;
+                sayHello();
+              }
+              return Expanded(child: MessagesScreen(messages: messages));
+            },
           ),
           Container(
             decoration: BoxDecoration(
@@ -115,7 +108,7 @@ class _MainDashboardState extends State<MainDashboard> {
                   ),
                 )),
                 IconButton(
-                    onPressed: ()=> checkBeforeSending(_controller.text),
+                    onPressed: () => checkBeforeSending(_controller.text),
                     icon: const Icon(Icons.send)),
                 GestureDetector(
                   onTapDown: (details) {
@@ -186,6 +179,7 @@ class _MainDashboardState extends State<MainDashboard> {
     debugPrint("Response : $responseJson");
     setState(() {
       addMessage(Message(text: DialogText(text: [responseJson['response']])));
+      speak(responseJson['response']);
     });
     if (responseJson['response'].toString().contains('BotWheels')) {
       await Future.delayed(const Duration(seconds: 5));
@@ -211,7 +205,6 @@ class _MainDashboardState extends State<MainDashboard> {
     }
     else{
       sendMessage(_controller.text);
-
     }
     _controller.clear();
   }

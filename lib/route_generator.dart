@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sarvagya/screens/auth_screens/code_verify.dart';
+import 'package:sarvagya/screens/auth_screens/login_screen.dart';
 import 'package:sarvagya/screens/auth_screens/phone_verify.dart';
 import 'package:sarvagya/screens/auth_screens/signup_screen.dart';
 import 'package:sarvagya/screens/drive_mode.dart';
@@ -8,24 +9,25 @@ import 'package:sarvagya/screens/main_dashboard.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    final args = settings.arguments;
 
     switch (settings.name) {
-      case 'verify':
-        return MaterialPageRoute(builder: (_) => PhoneVerify());
+      // case 'verify':
+      //   return MaterialPageRoute(builder: (_) => PhoneVerify());
       case 'home':
         return MaterialPageRoute(builder: (_) => const MainDashboard());
+      case 'login':
+        return MaterialPageRoute(builder: (_) => LoginScreen());
 
       case '/signup':
         return MaterialPageRoute(
-            builder: (_) => SignupScreen(args: args as String));
+            builder: (_) => SignupScreen());
       case 'camera':
         return MaterialPageRoute(builder: (_) => const DriveModePage());
-      case '/verifyOtp':
-        return MaterialPageRoute(
-            builder: (_) => verifyOtp(
-                  args: args as List<String>,
-                ));
+      // case '/verifyOtp':
+      //   return MaterialPageRoute(
+      //       builder: (_) => verifyOtp(
+      //             args: args as List<String>,
+      //           ));
 
       default:
         return _errorRoute();

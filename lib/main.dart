@@ -1,7 +1,10 @@
 import 'package:camera/camera.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:sarvagya/dataclass/person.dart';
 import 'package:sarvagya/route_generator.dart';
 import 'firebase/firebase_options.dart';
 
@@ -29,13 +32,18 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<Person>(create: (context) => Person(name: "", email: "", age: "", gender: "", uid: "", emergencyContacts: []))
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.teal,
+        ),
+        initialRoute: FirebaseAuth.instance.currentUser == null ? 'login': 'home',
+        onGenerateRoute: RouteGenerator.generateRoute,
       ),
-      initialRoute: 'home',
-      onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
 }

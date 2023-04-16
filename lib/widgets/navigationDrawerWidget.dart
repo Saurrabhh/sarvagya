@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sarvagya/screens/drawer_screens/botwheels_page.dart';
 import 'package:sarvagya/screens/drawer_screens/recommendation.dart';
 import 'package:sarvagya/screens/drawer_screens/sentimental_analysis.dart';
-
 import '../firebase/firebase_manager.dart';
 import '../screens/drawer_screens/ProfileScreen.dart';
-import '../screens/auth_screens/LoginScreen.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
   const NavigationDrawerWidget({Key? key}) : super(key: key);
@@ -85,7 +83,7 @@ class NavigationDrawerWidget extends StatelessWidget {
     );
   }
 
-  void selectedItem(BuildContext context, int i) {
+  Future<void> selectedItem(BuildContext context, int i) async {
     Navigator.of(context).pop();
     switch (i) {
       case 0:
@@ -93,9 +91,8 @@ class NavigationDrawerWidget extends StatelessWidget {
             MaterialPageRoute(builder: (context) => const ProfileScreen()));
         break;
       case 1:
-        FirebaseManager.auth.signOut();
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => LoginScreen()));
+        await FirebaseManager.auth.signOut();
+        Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
         break;
       case 2:
         Navigator.of(context).push(

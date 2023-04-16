@@ -4,25 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:sarvagya/utils/auth_utils.dart';
+
 import '../../dataclass/person.dart';
 import '../../firebase/firebase_manager.dart';
 import '../../utils/text_fileds.dart';
 
-class SignupScreen extends StatelessWidget {
-
-  SignupScreen({super.key});
+class LoginScreen extends StatelessWidget {
+  LoginScreen({Key? key}) : super(key: key);
 
   final FirebaseAuth auth = FirebaseManager.auth;
   final FirebaseDatabase database = FirebaseManager.database;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController ageController = TextEditingController();
-  final TextEditingController genderController = TextEditingController();
-  final TextEditingController phoneNoController = TextEditingController();
-  final TextEditingController ecPhone1Controller = TextEditingController();
-  final TextEditingController ecPhone2Controller = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -37,7 +30,7 @@ class SignupScreen extends StatelessWidget {
                 children: [
                   const SizedBox(height: 30),
                   const Text(
-                    'SignUp',
+                    'Log In',
                     style: TextStyle(color: Colors.white, fontSize: 28),
                   ),
                   const SizedBox(
@@ -45,30 +38,33 @@ class SignupScreen extends StatelessWidget {
                   ),
                   customTextField("Email", emailController,
                       inputType: TextInputType.emailAddress),
-                  customTextField("Name", nameController),
-                  customTextField("DOB", ageController,
-                      inputType: TextInputType.number),
-                  customTextField("Gender", genderController),
                   customTextField("Password", passwordController),
-                  customTextField("Phone No.", phoneNoController,
-                      inputType: TextInputType.phone),
-                  customTextField("Emergency Contact 1", ecPhone1Controller,
-                      inputType: TextInputType.phone),
-                  customTextField("Emergency Contact 2", ecPhone2Controller,
-                      inputType: TextInputType.phone),
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                      onPressed: () {signup(context);},
+                      onPressed: () {logIn(context);},
                       style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all(Colors.tealAccent),
+                        MaterialStateProperty.all(Colors.tealAccent),
                       ),
-                      child: const Text('SignUp', style: TextStyle(color: Colors
-                                  .teal, fontSize: 18),
-                                textAlign: TextAlign.center,),
+                      child: const Text('Log In', style: TextStyle(color: Colors
+                          .teal, fontSize: 18),
+                        textAlign: TextAlign.center,),
                     ),
-                  )
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      onPressed: () {Navigator.pushNamed(context, '/signup');},
+                      style: ButtonStyle(
+                        backgroundColor:
+                        MaterialStateProperty.all(Colors.tealAccent),
+                      ),
+                      child: const Text('Sign Up', style: TextStyle(color: Colors
+                          .teal, fontSize: 18),
+                        textAlign: TextAlign.center,),
+                    ),
+                  ),
                 ],
               )
             ],
@@ -80,47 +76,49 @@ class SignupScreen extends StatelessWidget {
 
 
 
-  signup(BuildContext context) async {
+  logIn(BuildContext context) async {
+    // Person person = Provider.of<Person>(context);
     NavigatorState state = Navigator.of(context);
     try {
       AuthUtils.showLoadingDialog(context);
-      final credentials = await auth.createUserWithEmailAndPassword(
+      final credentials = await auth.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
-      if(context.mounted){
-        Person person = Provider.of<Person>(context,listen: false);
-        person = Person(name: nameController.text, email: emailController.text, age: ageController.text, gender: genderController.text, uid: credentials.user!.uid, emergencyContacts: [ecPhone1Controller.text,ecPhone2Controller.text]);
-        await database.ref('Users/${person.uid}').set(person.toJson());
-        print("Pushed in DB");
-      }
-      //Goto Home
-      state.pushNamedAndRemoveUntil('home', (Route route) => false);
+      // final snapshot = await database.ref("Users/${credentials.user!.uid}").get();
+      // if(context.mounted){
+      //   Person person = Provider.of<Person>(context);
+      //   person = Person.fromJson(snapshot.value as Map);
+      // }
       print("Redirected to HomePage");
+      state.pushNamedAndRemoveUntil('home', (Route route) => false);
     } on FirebaseAuthException catch (e) {
-      print('Error Found');
-      if (e.code == 'weak-password') {
+      print(e.code);
+      if (e.code == 'user-not-found') {
+        print("user-not-found");
         Fluttertoast.showToast(
-          msg: "The password provided is too weak.",
+          msg: "No user found for that email.",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
         );
-      } else if (e.code == 'email-already-in-use') {
+      } else if (e.code == 'wrong-password') {
+        print("wrong-password");
         Fluttertoast.showToast(
-          msg: "An account already exists for that email.",
+          msg: "Wrong password provided for that user.",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
         );
       } else {
         Fluttertoast.showToast(
-          msg: "Invalid details",
+          msg: "Enter valid details",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
         );
       }
+      state.pop();
     } catch (e) {
       print(e.toString());
       Fluttertoast.showToast(
