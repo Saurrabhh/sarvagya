@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:http/http.dart' as http;
+import '../../services/api_service.dart';
 import '../../utils/dialogs.dart';
 import '../../widgets/navigationDrawerWidget.dart';
 import '../messages.dart';
@@ -28,7 +29,16 @@ class _RecommendationState extends State<Recommendation> {
   @override
   void initState() {
     _initSpeech();
+    initConvo();
     super.initState();
+  }
+
+  Future<void> initConvo() async {
+    await Future.delayed(const Duration(seconds: 1));
+    setState(() {
+      addMessage(Message(text: DialogText(text: const ["Enter a movie name to suggest."])));
+    });
+
   }
 
   @override
@@ -64,7 +74,7 @@ class _RecommendationState extends State<Recommendation> {
                     )),
                 IconButton(
                     onPressed: (){
-                      sendMessage(_controllerBook.text);
+                      sendMessage(_controllerBook.text.trim());
                       _controllerBook.clear();
                       },
 
@@ -130,14 +140,11 @@ class _RecommendationState extends State<Recommendation> {
       addMessage(Message(text: DialogText(text: [text])), true);
     });
 
-    Uri uri = Uri.parse("https://demo-bot.skyadav.repl.co/api/$text");
-    debugPrint("Api Get Call : $uri");
-    final response = await http.get(uri);
-    String responseBody = utf8.decoder.convert(response.bodyBytes);
-    final Map<String, dynamic> responseJson = json.decode(responseBody);
-    debugPrint("Response : $responseJson");
+    final Map<String, dynamic> responseJson = await ApiService.get("https://demo-bot.skyadav.repl.co/recommend/$text");
+    List movieList = responseJson['response'];
+    String output = "Here are some movie recommendations:\n-> ${movieList.join("\n-> ")}";
     setState(() {
-      addMessage(Message(text: DialogText(text: [responseJson['response']])));
+      addMessage(Message(text: DialogText(text: [output])));
     });
     if (responseJson['response'].toString().contains('BotWheels')) {
       await Future.delayed(const Duration(seconds: 5));

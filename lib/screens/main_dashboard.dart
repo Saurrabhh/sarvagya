@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:http/http.dart' as http;
 import '../dataclass/person.dart';
+import '../services/api_service.dart';
 import '../utils/dialogs.dart';
 import '../utils/text_to_speech.dart';
 import '../widgets/navigationDrawerWidget.dart';
@@ -108,7 +109,7 @@ class _MainDashboardState extends State<MainDashboard> {
                   ),
                 )),
                 IconButton(
-                    onPressed: () => checkBeforeSending(_controller.text),
+                    onPressed: () => checkBeforeSending(_controller.text.trim()),
                     icon: const Icon(Icons.send)),
                 GestureDetector(
                   onTapDown: (details) {
@@ -171,12 +172,8 @@ class _MainDashboardState extends State<MainDashboard> {
       addMessage(Message(text: DialogText(text: [text])), true);
     });
 
-    Uri uri = Uri.parse("https://demo-bot.skyadav.repl.co/api/$text");
-    debugPrint("Api Get Call : $uri");
-    final response = await http.get(uri);
-    String responseBody = utf8.decoder.convert(response.bodyBytes);
-    final Map<String, dynamic> responseJson = json.decode(responseBody);
-    debugPrint("Response : $responseJson");
+    final Map<String, dynamic> responseJson = await ApiService.get("https://demo-bot.skyadav.repl.co/api/$text");
+
     setState(() {
       addMessage(Message(text: DialogText(text: [responseJson['response']])));
       speak(responseJson['response']);
@@ -200,7 +197,7 @@ class _MainDashboardState extends State<MainDashboard> {
   }
 
   checkBeforeSending(String input){
-    if(input=='recommend'){
+    if(input=='recommend' || input=='Recommend'){
       showRecommendationDialog(context);
     }
     else{
