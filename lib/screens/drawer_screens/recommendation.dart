@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:dialog_flowtter/dialog_flowtter.dart';
 import 'package:flutter/material.dart';
+import 'package:sarvagya/utils/text_to_speech.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:http/http.dart' as http;
@@ -24,7 +25,6 @@ class _RecommendationState extends State<Recommendation> {
   bool _speechEnabled = false;
   String words = "";
 
-
   @override
   void initState() {
     _initSpeech();
@@ -40,7 +40,6 @@ class _RecommendationState extends State<Recommendation> {
           style: TextStyle(
               color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
         ),
-
       ),
       body: Column(
         children: [
@@ -57,17 +56,16 @@ class _RecommendationState extends State<Recommendation> {
               children: [
                 Expanded(
                     child: TextField(
-                      controller: _controllerBook,
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                    )),
+                  controller: _controllerBook,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                )),
                 IconButton(
-                    onPressed: (){
+                    onPressed: () {
                       sendMessage(_controllerBook.text);
                       _controllerBook.clear();
-                      },
-
+                    },
                     icon: const Icon(Icons.send)),
                 GestureDetector(
                   onTapDown: (details) {
@@ -83,7 +81,7 @@ class _RecommendationState extends State<Recommendation> {
                     repeatPauseDuration: const Duration(milliseconds: 100),
                     endRadius: 30.0,
                     child:
-                    const CircleAvatar(radius: 25, child: Icon(Icons.mic)),
+                        const CircleAvatar(radius: 25, child: Icon(Icons.mic)),
                   ),
                 )
               ],
@@ -130,14 +128,17 @@ class _RecommendationState extends State<Recommendation> {
       addMessage(Message(text: DialogText(text: [text])), true);
     });
 
-    Uri uri = Uri.parse("https://demo-bot.skyadav.repl.co/api/$text");
+    Uri uri = Uri.parse("https://demo-bot.skyadav.repl.co/recommend/$text");
     debugPrint("Api Get Call : $uri");
     final response = await http.get(uri);
     String responseBody = utf8.decoder.convert(response.bodyBytes);
     final Map<String, dynamic> responseJson = json.decode(responseBody);
     debugPrint("Response : $responseJson");
+    String responseJsonString = "The top recommendations are -\n -> " +
+        responseJson['response'].join('\n -> ');
     setState(() {
-      addMessage(Message(text: DialogText(text: [responseJson['response']])));
+      addMessage(Message(text: DialogText(text: [responseJsonString])));
+      speak(responseJsonString);
     });
     if (responseJson['response'].toString().contains('BotWheels')) {
       await Future.delayed(const Duration(seconds: 5));
@@ -156,5 +157,4 @@ class _RecommendationState extends State<Recommendation> {
   addMessage(Message message, [bool isUserMessage = false]) {
     messages.add({'message': message, 'isUserMessage': isUserMessage});
   }
-
 }
