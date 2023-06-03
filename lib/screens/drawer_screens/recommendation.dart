@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:dialog_flowtter/dialog_flowtter.dart';
 import 'package:flutter/material.dart';
+import 'package:sarvagya/api.dart';
 import 'package:sarvagya/utils/text_to_speech.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -131,7 +132,7 @@ class _RecommendationState extends State<Recommendation> {
       addMessage(Message(text: DialogText(text: [text])), true);
     });
 
-    final Map<String, dynamic> responseJson = await ApiService.get("https://demo-bot.skyadav.repl.co/recommend/$text");
+    final Map<String, dynamic> responseJson = await ApiService.get("$currentApi/recommend/$text");
     List movieList = responseJson['response'];
     String output = "Here are some movie recommendations:\n-> ${movieList.join("\n-> ")}";
     setState(() {

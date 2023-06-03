@@ -1,13 +1,13 @@
-import 'dart:convert';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:provider/provider.dart';
-import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:dialog_flowtter/dialog_flowtter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sarvagya/api.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
-import 'package:http/http.dart' as http;
+
 import '../dataclass/person.dart';
 import '../services/api_service.dart';
 import '../utils/dialogs.dart';
@@ -17,6 +17,7 @@ import 'messages.dart';
 
 class MainDashboard extends StatefulWidget {
   const MainDashboard({super.key});
+
   @override
   State<MainDashboard> createState() => _MainDashboardState();
 }
@@ -53,6 +54,7 @@ class _MainDashboardState extends State<MainDashboard> {
       speak("Hello ${person.name}");
     });
   }
+
   @override
   void initState() {
     person = Provider.of<Person>(context, listen: false);
@@ -70,6 +72,18 @@ class _MainDashboardState extends State<MainDashboard> {
               color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
         ),
         actions: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                currentApi = currentApi == saurabhApi ? chaitanyaApi : saurabhApi;
+              });
+            },
+            child: CircleAvatar(
+              child: currentApi == saurabhApi
+                  ? const Text("SK")
+                  : const Text("CR"),
+            ),
+          ),
           IconButton(
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
@@ -159,7 +173,8 @@ class _MainDashboardState extends State<MainDashboard> {
                   ),
                 )),
                 IconButton(
-                    onPressed: () => checkBeforeSending(_controller.text.trim()),
+                    onPressed: () =>
+                        checkBeforeSending(_controller.text.trim()),
                     icon: const Icon(Icons.send)),
                 GestureDetector(
                   onTapDown: (details) {
@@ -222,7 +237,8 @@ class _MainDashboardState extends State<MainDashboard> {
       addMessage(Message(text: DialogText(text: [text])), true);
     });
 
-    final Map<String, dynamic> responseJson = await ApiService.get("https://demo-bot.skyadav.repl.co/api/$text");
+    final Map<String, dynamic> responseJson =
+        await ApiService.get("$currentApi/api/$text");
 
     setState(() {
       addMessage(Message(text: DialogText(text: [responseJson['response']])));
@@ -254,7 +270,6 @@ class _MainDashboardState extends State<MainDashboard> {
     }
     _controller.clear();
   }
-
 
 // location(BuildContext context) async {
 //   print("LOC");

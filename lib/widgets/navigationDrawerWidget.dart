@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:sarvagya/api.dart';
 import 'package:sarvagya/screens/drawer_screens/botwheels_page.dart';
 import 'package:sarvagya/screens/drawer_screens/recommendation.dart';
 import 'package:sarvagya/screens/drawer_screens/sentimental_analysis.dart';
+
 import '../firebase/firebase_manager.dart';
 import '../screens/drawer_screens/ProfileScreen.dart';
 
@@ -56,6 +58,22 @@ class NavigationDrawerWidget extends StatelessWidget {
                 height: 20,
               ),
               buildMenuItem(
+                drawerText: 'Add api',
+                drawerIcon: Icons.add,
+                onClicked: () => selectedItem(context, 5),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              buildMenuItem(
+                drawerText: 'About',
+                drawerIcon: Icons.info,
+                onClicked: () => selectedItem(context, 6),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              buildMenuItem(
                 drawerText: 'LogOut',
                 drawerIcon: Icons.logout,
                 onClicked: () => selectedItem(context, 1),
@@ -106,6 +124,26 @@ class NavigationDrawerWidget extends StatelessWidget {
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => const Recommendation()));
         break;
+      case 5:
+        showDialog(
+          context: context,
+          builder: (context) {
+            final TextEditingController controller = TextEditingController();
+            return AlertDialog(
+              content: TextFormField(controller: controller,),
+              actions: [
+                TextButton(onPressed: () => Navigator.pop(context),
+                    child: const Text("CANCEL")),
+                TextButton(
+                    onPressed: () => {currentApi = controller.text, Navigator.pop(context)}, child: const Text("ADD")),
+              ],
+            );
+          });
+        break;
+      case 6:
+        showDialog(context: context, builder: (context) => AlertDialog(title: Text(currentApi),));
+        break;
+
     }
   }
 }
